@@ -1,0 +1,7 @@
+{
+  "name": "ractive-isomorphic-demo",
+  "private": true,
+  "dependencies": {
+    "semantic-ui": "~1.12.0"
+  }
+}
