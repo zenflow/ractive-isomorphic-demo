@@ -32,10 +32,7 @@ gulp.task('bower', function(){
 	return new Promise(function(resolve, reject){
 		bower.commands.install()
 			.on('error', reject)
-			.on('end', function(){
-				console.log('end', arguments);
-				resolve();
-			});
+			.on('end', resolve);
 	});
 });
 
