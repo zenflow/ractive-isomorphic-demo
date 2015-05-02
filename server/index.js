@@ -5,11 +5,11 @@ var logger = require('morgan');
 var serveStatic = require('serve-static');
 
 var api = require('../shared/api');
-var Website = require('../shared/Website');
+var Site = require('../shared/Site');
 
 var app = connect();
 app.use(logger('dev'));
-app.use(Website.connect({api: api}));
+app.use(Site.connect({api: api}));
 app.use(serveStatic(path.join(__dirname, '../client/build')));
 
 var server = http.createServer(app);

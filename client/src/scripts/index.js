@@ -1,3 +1,3 @@
-var Website = require('../../../shared/Website');
+var Site = require('../../../shared/Site');
 var api = require('../../../shared/api');
-window.vm = Website.client({api: api});
+window.vm = Site.client({api: api});

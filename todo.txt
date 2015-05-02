@@ -1,0 +1,3 @@
+mock ractive-express-demo layout & pages
+use include-folder + folderify (npm falafel)
+commit & PR to Ractive new functionality? vm.set(promise)?
