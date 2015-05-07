@@ -1,0 +1,19 @@
+<a class="ui top left attached label">
+    <span class="ui breadcrumb">
+        {{#breadcrumbs:i}}
+            {{#breadcrumbs.length-1==i}}
+                <span class="section active">{{.text}}</span>
+            {{else}}
+                <a class="section" href="{{getUrl(.route, .params)}}">{{.text}}</a>
+                <i class="right chevron icon divider"></i>
+            {{/}}
+        <!--
+            <a class="section {breadcrumbs.length-1==i?'active':''}"
+               href="{breadcrumbs.length-1!=i?getUrl(.route, .params):''}">{.text}</a>
+            {#breadcrumbs.length-1!=i}
+                <i class="right chevron icon divider"></i>
+            {/}
+            -->
+        {{/}}
+    </span>
+</a>

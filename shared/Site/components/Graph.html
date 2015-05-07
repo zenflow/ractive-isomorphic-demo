@@ -1,0 +1,16 @@
+<svg viewBox="0 0 1050 350" style="width: 100%">
+    <line x1="50" y1="0" x2="50" y2="250" style="stroke:rgb(0,0,0); stroke-width: 1" />
+    <line x1="50" y1="250" x2="1050" y2="250" style="stroke:rgb(0,0,0); stroke-width: 1 " />
+    {{#graph.labels:i}}
+        <g transform="translate( {{1000/graph.labels.length*(i+0.5)+50}} , 250)">
+            <rect height="10" width="1" />
+            <text text-anchor="end" x="-15" transform="rotate(270)">{{.}}</text>
+        </g>
+    {{/}}
+    {{#graph.groups}}
+        {{#data}}
+            {{JSON.stringify(.)}}
+        {{/}}
+    {{/}}
+</svg>
+<p>{{JSON.stringify((data))}}</p>

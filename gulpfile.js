@@ -14,14 +14,19 @@ var yargs = require('yargs');
 var less = require('gulp-less');
 var minifyCss = require('gulp-minify-css');
 var autoprefixer = require('gulp-autoprefixer');
+var Promise = require('ractive-isomorphic').Promise;
 
 console.log('setting up '+(yargs.argv.production?'production':'developer')+' build...');
-var do_sourcemaps = true;
-var do_minimize = yargs.argv.production;
-var browserify_transforms = ['brfs'];
-var browserify_node_modules = ['ractive-isomorphic'];
-//from semantic-ui\tasks\config\project\tasks.js:95
-var browsers = [ 'last 2 version', '> 1%', 'opera 12.1', 'safari 6', 'ie 9', 'bb 10', 'android 4'];
+var config = function(key, value){
+	console.log('config', key, typeof value, value);
+	eval(key + ' = ' + JSON.stringify(value) + '; ');
+};
+config('do_sourcemaps', true);
+config('do_minimize', yargs.argv.production?true:false);
+config('do_bower_scripts', false);
+config('custom_semantic_build', yargs.argv.production?true:false);
+config('browserify_transforms', ['brfs']);
+config('browserify_node_modules', ['ractive-isomorphic', 'httpinvoke', 'ramjet', 'moment']);
 
 var cleaned = false;
 gulp.task('clean', function (done) {
@@ -74,34 +79,40 @@ gulp.task('scripts:index', ['clean'], function () {
 		.pipe(gif(do_sourcemaps, sourcemaps.write('./')))
 		.pipe(gulp.dest('./client/build/scripts'));
 });
-gulp.task('scripts', ['scripts:bower_components', 'scripts:node_modules', 'scripts:index']);
+gulp.task('scripts', (do_bower_scripts?['scripts:bower_components']:[]).concat(['scripts:node_modules', 'scripts:index']));
 
-gulp.task('styles', ['clean', 'bower'], function (cb) {
-	var custom_src_stream = gulp.src('./client/src/styles/**')
-		.pipe(gulp.dest('./bower_components/semantic-ui/src'));
-	custom_src_stream.once('error', cb);
-	custom_src_stream.once('end', function(){
-		var stream = gulp.src('./bower_components/semantic-ui/src/index.less')
-			.pipe(gif(do_sourcemaps, sourcemaps.init()))
-			.pipe(less())
-			.pipe(autoprefixer({browsers: browsers}))
-			.pipe(gif(do_minimize, minifyCss({
-				processImport: false,
-				restructuring: false,
-				keepSpecialComments: 0
-			})))
-			.pipe(gif(do_sourcemaps, sourcemaps.write('./')))
-			.pipe(gulp.dest('./client/build/styles'));
-		stream.once('error', cb);
-		stream.once('end', function(){
-			cb(null);
+gulp.task('styles:semantic', ['clean', 'bower'], function () {
+	if (custom_semantic_build){
+		return new Promise(function(resolve, reject){
+			var custom_src_stream = gulp.src('./client/src/styles/**')
+				.pipe(gulp.dest('./bower_components/semantic-ui/src'));
+			custom_src_stream.once('error', reject);
+			custom_src_stream.once('end', function(){
+				var stream = gulp.src('./bower_components/semantic-ui/src/semantic.less')
+					.pipe(gif(do_sourcemaps, sourcemaps.init()))
+					.pipe(less())
+					.pipe(autoprefixer({browsers: [ 'last 2 version', '> 1%', 'opera 12.1', 'safari 6', 'ie 9', 'bb 10', 'android 4']}))
+					.pipe(gif(do_minimize, minifyCss({
+						processImport: false,
+						restructuring: false,
+						keepSpecialComments: 0
+					})))
+					.pipe(gif(do_sourcemaps, sourcemaps.write('./')))
+					.pipe(gulp.dest('./client/build/styles'));
+				stream.once('error', reject);
+				stream.once('end', resolve);
+			});
 		});
-	});
+	} else {
+		return gulp.src('./bower_components/semantic-ui/dist/semantic.css')
+			.pipe(gulp.dest('./client/build/styles'));
+	}
 });
+gulp.task('styles', ['styles:semantic']);
 
 gulp.task('assets:bower_components', ['clean', 'bower'], function(){
 	return gulp.src('./bower_components/semantic-ui/src/**/assets/**')
-		.pipe(gulp.dest('./client/build'));
+		.pipe(gulp.dest('./client/build'+(custom_semantic_build?'':'/styles')));
 });
 gulp.task('assets:index', ['clean'], function(){
 	return gulp.src('./client/src/assets/**')

@@ -1,3 +1,8 @@
-mock ractive-express-demo layout & pages
+contribute ramjet.js and fly.js
+resolve breadcrumb onload issue
+display js/html for ExamplePage
+nice background + copywriting +fork me banner / button
+publish
+
 use include-folder + folderify (npm falafel)
-commit & PR to Ractive new functionality? vm.set(promise)?
+use 'npm-stats' and 'github' modules

@@ -1,0 +1,36 @@
+<div class="ui segment" intro="fly: {x: 2000, opacity: 1}" outro="fly: {x: -2000, opacity: 1}">
+    {{>breadcrumbs}}
+    <h1 class="ui header">
+        <i class="github icon"></i>
+        <div class="content">
+            Npm Example
+            <div class="sub header">
+                graphical view of downloads statistics for packages on npm
+            </div>
+        </div>
+    </h1>
+    <div class="ui divider"></div>
+    <div class="ui two column middle aligned relaxed fitted stackable grid">
+        <div class="center aligned column">
+            <div class="ui list">
+                {{#packages}}
+                    <div class="item">
+                        {{.package}}
+                        <a on-click="remove(.package)">
+                            <i class="icon delete"></i>
+                        </a>
+                    </div>
+                {{/}}
+            </div>
+            <div class="ui icon input">
+                <input class="prompt" type="text" placeholder="package name" autofocus autocomplete="off" on-keypress="prompt-keypress">
+                <i class="plus icon"></i>
+            </div>
+        </div>
+        <div class="center aligned column">
+            <p>lorum ipsum *** write here ***</p>
+        </div>
+    </div>
+    <div class="ui divider"></div>
+    <Graph graph="{{graph}}"/>
+</div>

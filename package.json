@@ -21,7 +21,10 @@
   "homepage": "https://github.com/zenflow/ractive-isomorphic-demo",
   "dependencies": {
     "connect": "^3.3.5",
+    "httpinvoke": "^1.4.0",
+    "moment": "^2.10.2",
     "morgan": "^1.5.2",
+    "paths-js": "^0.3.4",
     "ractive-isomorphic": "https://github.com/zenflow/ractive-isomorphic/tarball/master",
     "serve-static": "^1.9.2"
   },
@@ -40,6 +43,7 @@
     "gulp-sourcemaps": "^1.5.2",
     "gulp-uglify": "^1.2.0",
     "main-bower-files": "2.5.0",
+    "ramjet": "^0.4.4",
     "vinyl-buffer": "^1.0.0",
     "vinyl-source-stream": "^1.1.0",
     "yargs": "^3.8.0"

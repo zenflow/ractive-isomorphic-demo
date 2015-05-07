@@ -1,1 +1,24 @@
-<a href="{{getUrl('GithubExample', {user: 'zenflow', 'repo': 'ractive-isomorphic'})}}">Github</a>
+<div class="ui segment" intro="fly: {x: 2000, opacity: 1}" outro="fly: {x: -2000, opacity: 1}">
+    {{>breadcrumbs}}
+    <h1 class="ui header">
+        <i class="video play outline icon"></i>
+        <div class="content">
+            Examples
+            <div class="sub header">
+                lets take it for a spin...
+            </div>
+        </div>
+    </h1>
+    <div class="ui divider"></div>
+    <div class="ui divided list">
+        {{#examples}}
+            <div class="item">
+                <i class="big {{example_icon}} icon"></i>
+                <div class="content">
+                    <a class="header" href="{{getUrl(.name, .example_params)}}">{{example_name}}</a>
+                    <div class="description">{{example_description}}</div>
+                </div>
+            </div>
+        {{/}}
+    </div>
+</div>

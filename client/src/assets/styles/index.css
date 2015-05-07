@@ -1,0 +1,33 @@
+/* hack to prevent horizontal scroll bar when flying in pages */
+body {
+    overflow-x: hidden;
+}
+
+.ri-body,
+.ri-body .ui.page.grid,
+.ri-body .ui.page.grid > .row,
+.ri-body .ui.page.grid > .row > .column,
+.ri-body .ui.page.grid > .row > .column > .ri-pages{
+    height: 100%;
+}
+
+.ri-pages > .ri-page{
+    width: 100%;
+    min-height: 100%;
+    display: flex;
+    align-items: center;
+}
+.ri-pages > .ri-page:last-child {
+    position: relative;
+}
+.ri-pages > .ri-page:not(:last-child) {
+    position: absolute;
+}
+.ri-pages > .ri-page > .ui.segment {
+    flex: none;
+    width: 100%
+}
+
+.ri-page.NpmExample .ui.stackable.grid {
+    position: relative;
+}
