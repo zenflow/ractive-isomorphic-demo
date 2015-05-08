@@ -1,4 +1,3 @@
-css build (concat)
 NpmExample
     background textures on graph polygons
     overlay, stacked & stacked relative modes

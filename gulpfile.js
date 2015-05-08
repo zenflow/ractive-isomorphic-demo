@@ -22,9 +22,9 @@ var config = function(key, value){
 	eval(key + ' = ' + JSON.stringify(value) + '; ');
 };
 config('do_sourcemaps', true);
-config('do_minimize', yargs.argv.production?true:false);
 config('do_bower_scripts', false);
-config('custom_semantic_build', yargs.argv.production?true:false);
+config('do_minimize', yargs.argv.production?true:yargs.argv.do_minimize);
+config('custom_semantic_build', yargs.argv.production?true:yargs.argv.custom_semantic_build);
 config('browserify_transforms', ['brfs']);
 config('browserify_node_modules', ['ractive-isomorphic', 'httpinvoke', 'ramjet', 'moment']);
 
@@ -81,6 +81,14 @@ gulp.task('scripts:index', ['clean'], function () {
 });
 gulp.task('scripts', (do_bower_scripts?['scripts:bower_components']:[]).concat(['scripts:node_modules', 'scripts:index']));
 
+var autoprefixer_options = {
+	browsers: [ 'last 2 version', '> 1%', 'opera 12.1', 'safari 6', 'ie 9', 'bb 10', 'android 4']
+};
+var minifyCss_options = {
+	processImport: false,
+	restructuring: false,
+	keepSpecialComments: 0
+};
 gulp.task('styles:semantic', ['clean', 'bower'], function () {
 	if (custom_semantic_build){
 		return new Promise(function(resolve, reject){
@@ -91,12 +99,8 @@ gulp.task('styles:semantic', ['clean', 'bower'], function () {
 				var stream = gulp.src('./bower_components/semantic-ui/src/semantic.less')
 					.pipe(gif(do_sourcemaps, sourcemaps.init()))
 					.pipe(less())
-					.pipe(autoprefixer({browsers: [ 'last 2 version', '> 1%', 'opera 12.1', 'safari 6', 'ie 9', 'bb 10', 'android 4']}))
-					.pipe(gif(do_minimize, minifyCss({
-						processImport: false,
-						restructuring: false,
-						keepSpecialComments: 0
-					})))
+					.pipe(autoprefixer(autoprefixer_options))
+					.pipe(gif(do_minimize, minifyCss(minifyCss_options)))
 					.pipe(gif(do_sourcemaps, sourcemaps.write('./')))
 					.pipe(gulp.dest('./client/build/styles'));
 				stream.once('error', reject);
@@ -108,7 +112,16 @@ gulp.task('styles:semantic', ['clean', 'bower'], function () {
 			.pipe(gulp.dest('./client/build/styles'));
 	}
 });
-gulp.task('styles', ['styles:semantic']);
+gulp.task('styles:css', ['clean'], function(){
+	return gulp.src('./client/src/styles/css/**')
+		.pipe(gif(do_sourcemaps, sourcemaps.init()))
+		.pipe(concat('css.css'))
+		.pipe(autoprefixer(autoprefixer_options))
+		.pipe(gif(do_minimize, minifyCss(minifyCss_options)))
+		.pipe(gif(do_sourcemaps, sourcemaps.write('./')))
+		.pipe(gulp.dest('./client/build/styles'))
+});
+gulp.task('styles', ['styles:semantic', 'styles:css']);
 
 gulp.task('assets:bower_components', ['clean', 'bower'], function(){
 	return gulp.src('./bower_components/semantic-ui/src/**/assets/**')
@@ -123,8 +136,14 @@ gulp.task('assets', ['assets:bower_components', 'assets:index']);
 gulp.task('build', ['scripts', 'styles', 'assets']);
 
 gulp.task('watch', ['build'], function() {
+	// scripts
 	gulp.watch(['./shared/**', './client/src/scripts/**'], ['scripts:index']);
-	gulp.watch(['./client/src/styles/**'], ['styles']);
+	// styles
+	if (custom_semantic_build){
+		gulp.watch(['./client/src/styles/semantic/**'], ['styles:semantic']);
+	}
+	gulp.watch(['./client/src/styles/css/**'], ['styles:css']);
+	// assets
 	gulp.watch(['./client/src/assets/**'], ['assets:index']);
 });
 

@@ -26,4 +26,5 @@ body {
 .ri-pages > .ri-page > .ui.segment {
     flex: none;
     width: 100%
+    min-height: 20rem
 }
