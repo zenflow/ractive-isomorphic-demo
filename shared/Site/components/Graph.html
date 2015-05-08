@@ -1,9 +1,9 @@
-<svg viewBox="0 0 {{width+margin_width}} {{height+margin_height}}" style="width: 100%">
+<svg class="Graph" viewBox="0 0 {{width+margin_width}} {{height+margin_height}}">
     <g style="stroke:rgb(0,0,0); stroke-width: 1">
         <line x1="{{margin_width}}" y1="{{height}}" x2="{{margin_width}}" y2="0"></line>
         <line x1="{{margin_width}}" y1="{{height}}" x2="{{width+margin_width}}" y2="{{height}}"></line>
         {{#x_labels:x}}
-        <g transform="translate( {{width*(x+0.5)/x_labels.length+margin_width}} , {{height}})">
+        <g transform="translate( {{width*x/(x_labels.length-1)+margin_width}} , {{height}})">
             <g transform="rotate(-90)">
                 <line x1="0" y1="0" x2="{{-margin_height/10}}" y2="0"></line>
                 <text text-anchor="end" x="{{-margin_height*2/10}}">{{.}}</text>

@@ -1,0 +1,3 @@
+.Home .ui.segment > :last-child {
+    text-align: center;
+}

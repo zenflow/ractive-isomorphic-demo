@@ -13,7 +13,7 @@ var Graph = ri.Ractive.extend({
 		getLayerPoints: function (data, width, height, max) {
 			var self = this;
 			return ri._.map(data, function (datum, x) {
-					return (width * (x + 0.5) / data.length) + ' ' + (height * datum / max);
+					return (width * x / (data.length-1)) + ' ' + (height * datum / max);
 				}).join(' ') + ' ' + width + ',0 0,0';
 		}
 	},
@@ -21,6 +21,9 @@ var Graph = ri.Ractive.extend({
 		var self = this;
 		self.observe('graph', function(graph){
 			if (graph){
+				ri._.forEach(graph.layers, function(layer){
+					if (layer.length <= 1){throw new Error('must have more than one data point!')}
+				});
 				self.set(ri._.assign({}, graph, {
 					max: Math.max.apply(Math, ri._.map(graph.layers, function(layer){
 						return Math.max.apply(Math, layer);

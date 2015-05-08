@@ -1,0 +1,14 @@
+.NpmExample .ui.large.icon.input{
+    max-width: 100%
+}
+.NpmExample .ui.grid > .column:last-child {
+    text-align: right;
+}
+.NpmExample .ui.grid > .column:last-child > :first-child {
+    text-align: left;
+}
+
+
+.Graph{
+    width: 100%
+}
