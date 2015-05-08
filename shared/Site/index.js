@@ -18,6 +18,15 @@ var Site = ri.Site.extend({
 	bodyTemplate: bodyTemplate,
 	data: {
 		title: 'ractive-isomorphic-demo'
+	},
+	displayError: function(text){
+		var self = this;
+		// ***
+		if (self.on_client){
+			process.nextTick(function(){
+				window.alert(text);
+			});
+		}
 	}
 });
 

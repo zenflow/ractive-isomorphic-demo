@@ -1,5 +1,14 @@
+css build (concat)
+NpmExample
+    background textures on graph polygons
+    overlay, stacked & stacked relative modes
+    vertical scale
+    axis labels
+    layer highlight & stats onmouseover
+    range input
+    datapoint grouping input
 contribute ramjet.js and fly.js
-resolve breadcrumb onload issue
+resolve breadcrumb Flash of Unstyled Content
 display js/html for ExamplePage
 nice background + copywriting +fork me banner / button
 publish

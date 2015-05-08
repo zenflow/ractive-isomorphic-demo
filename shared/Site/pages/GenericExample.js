@@ -4,7 +4,7 @@ var GenericExample = Generic.extend({
 		var self = this;
 		self._super.apply(self, arguments);
 		self.pushBreadcrumb({route: 'Examples', text: 'examples'});
-		self.pushBreadcrumb({route: self.name, text: self.example_name});
+		self.pushBreadcrumb({route: self.name, params: self.example_params, text: self.example_name});
 	}
 });
 module.exports = GenericExample;

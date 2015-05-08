@@ -10,27 +10,30 @@
         </div>
     </h1>
     <div class="ui divider"></div>
-    <div class="ui two column middle aligned relaxed fitted stackable grid">
-        <div class="center aligned column">
-            <div class="ui list">
+    <div class="ui grid">
+        <div class="twelve wide column">
+            <Graph graph="{{graph}}"/>
+        </div>
+        <div class="four wide column" style="text-align: right">
+            <div style="text-align: left">
+                <div class="ui huge red right ribbon label">
+                    packages
+                </div>
+            </div>
+            <div class="ui big list">
                 {{#packages}}
-                    <div class="item">
-                        {{.package}}
-                        <a on-click="remove(.package)">
-                            <i class="icon delete"></i>
-                        </a>
-                    </div>
+                <div class="item">
+                    {{.package}}
+                    <a on-click="remove(.package)">
+                        <i class="delete icon"></i>
+                    </a>
+                </div>
                 {{/}}
             </div>
-            <div class="ui icon input">
+            <div class="ui large icon input" style="max-width: 100%">
                 <input class="prompt" type="text" placeholder="package name" autofocus autocomplete="off" on-keypress="prompt-keypress">
                 <i class="plus icon"></i>
             </div>
         </div>
-        <div class="center aligned column">
-            <p>lorum ipsum *** write here ***</p>
-        </div>
     </div>
-    <div class="ui divider"></div>
-    <Graph graph="{{graph}}"/>
 </div>

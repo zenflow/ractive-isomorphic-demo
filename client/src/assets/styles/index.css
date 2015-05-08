@@ -27,7 +27,3 @@ body {
     flex: none;
     width: 100%
 }
-
-.ri-page.NpmExample .ui.stackable.grid {
-    position: relative;
-}

@@ -10,7 +10,7 @@ var NpmExample = GenericExample.extend({
 	example_name: 'npm',
 	example_description: 'graphical view of downloads statistics for packages on npm',
 	example_icon: 'github',
-	example_params: {packages: 'ractive lodash express'},
+	example_params: {packages: 'react angular ractive'},
 	template: template,
 	remove: function(package_name){
 		var self = this;
@@ -21,40 +21,63 @@ var NpmExample = GenericExample.extend({
 		var self = this;
 		self._super.apply(self, arguments);
 
-		var packages = params.packages ? params.packages.split(' ') : [];
+		var package_names = params.packages ? params.packages.split(' ') : [];
+		var subtitle = (package_names.length == 0) && ('npm example')
+			|| (package_names.length == 1) && ('viewing ' + package_names[0])
+			|| ('comparing ' + package_names.join(' + '));
 
-		// end breadcrumbs
+		// set breadcrumbs
+		self.pushBreadcrumb({route: self.name, params: params, text: package_names.length == 0 ? '...' : subtitle});
 		self.endBreadcrumbs();
+
 		// set title
-		var subtitle = (packages.length == 0) && ('npm example')
-			|| (packages.length == 1) && ('viewing ' + packages[0])
-			|| ('comparing ' + packages.join(' + '));
 		self.root.set('title', subtitle + ' @ ' + self.root.get('title'));
 
-		return Promise.all(self._.map(packages, function(package_name, i){
-			return self.api.http('https://api.npmjs.org/downloads/range/last-month/'+package_name, 'GET');
+		return Promise.all(self._.map(package_names, function(package_name, i){
+			return self.api.http('https://api.npmjs.org/downloads/range/last-month/' + package_name, 'GET')
+				.then(function (response) {
+					if (response.statusCode != 200) {
+						throw new Error('http '+response.statusCode+' != 200');
+					}
+					return response;
+				});
 		})).then(function(responses) {
-			return self._(responses).filter(function(response){
-				return response.statusCode == 200;
-			}).map(function(response){
-				return JSON.parse(response.body);
-			}).filter(function(body){
-				return !body.error;
-			}).value();
-		}).then(function(packages){
-			var dates = [];
-			for (var date = moment(packages[0].start); !date.isSame(packages[0].end); date.add(1, 'd')){
-				dates.push(date.clone());
-			}
-			var labels = self._.map(dates, function(date){
-				return date.format('MMMM Do');
-			});
-			self.set({
-				packages: packages,
-				graph: {
-					labels: labels
+			var packages = self._(responses).map(function(response, i){
+				return typeof response.body=='string' && JSON.parse(response.body);
+			}).filter(function(_package, i){
+				var error = _package && _package.error;
+				if (error){
+					self.root.displayError('error getting package \''+package_names[i]+'\': \n' + error);
 				}
-			});
+				return !error;
+			}).value();
+
+			if (packages.length){
+				var dates = [];
+				for (var date = moment(packages[0].start); !date.isSame(packages[0].end); date.add(1, 'd')){
+					dates.push(date.clone());
+				}
+				self.set({
+					packages: packages,
+					graph: {
+						x_labels: self._.map(dates, function(date){
+							return date.format('MMMM Do');
+						}),
+						layers: self._.map(packages, function(_package){
+							return self._.map(dates, function(date, i){
+								var ref = self._.find(_package.downloads, function(d){return date.isSame(d.day);});
+								return ref ? ref.downloads : 0;
+							});
+						}),
+						colors: ['red','orange','yellow','green','blue','indigo','violet']
+					}
+				});
+			} else {
+				self.set({
+					packages: [],
+					graph: null
+				});
+			}
 		});
 
 	},
@@ -74,5 +97,4 @@ var NpmExample = GenericExample.extend({
 		});
 	}
 });
-
 module.exports = NpmExample;

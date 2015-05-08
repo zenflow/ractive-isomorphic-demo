@@ -24,7 +24,6 @@
     "httpinvoke": "^1.4.0",
     "moment": "^2.10.2",
     "morgan": "^1.5.2",
-    "paths-js": "^0.3.4",
     "ractive-isomorphic": "https://github.com/zenflow/ractive-isomorphic/tarball/master",
     "serve-static": "^1.9.2"
   },
