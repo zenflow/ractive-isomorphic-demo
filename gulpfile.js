@@ -116,7 +116,6 @@ gulp.task('styles:css', ['clean'], function(){
 	return gulp.src('./client/src/styles/css/**')
 		.pipe(gif(do_sourcemaps, sourcemaps.init()))
 		.pipe(concat('css.css'))
-		.pipe(autoprefixer(autoprefixer_options))
 		.pipe(gif(do_minimize, minifyCss(minifyCss_options)))
 		.pipe(gif(do_sourcemaps, sourcemaps.write('./')))
 		.pipe(gulp.dest('./client/build/styles'))
