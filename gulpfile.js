@@ -143,7 +143,7 @@ gulp.task('watch', ['build'], function() {
 	}
 	gulp.watch(['./client/src/styles/css/**'], ['styles:css']);
 	// assets
-	gulp.watch(['./client/src/assets/**'], ['assets:index']);
+	gulp.watch(['./client/src/assets/**/**'], ['assets:index']);
 });
 
 gulp.task('dev', ['watch'], function(cb){

@@ -1,14 +1,18 @@
 NpmExample
-    background textures on graph polygons
     overlay, stacked & stacked relative modes
     vertical scale
     axis labels
     layer highlight & stats onmouseover
     range input
     datapoint grouping input
-contribute ramjet.js and fly.js
-resolve breadcrumb Flash of Unstyled Content
+    download svg
+
+self._ & ri._ -> _
+site.displayError
 display js/html for ExamplePage
+resolve breadcrumb Flash of Unstyled Content
+
+contribute ramjet.js and fly.js
 nice background + copywriting +fork me banner / button
 publish
 

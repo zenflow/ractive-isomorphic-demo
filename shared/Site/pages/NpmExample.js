@@ -3,6 +3,9 @@ var path = require('path');
 var GenericExample = require('./GenericExample');
 var moment = require('moment');
 var template = fs.readFileSync(path.join(__dirname, 'NpmExample.html'), 'utf8');
+var ri = require('ractive-isomorphic');
+
+var default_graph_textures = ri._(7).range().map(function(i){return '/images/textures/'+i+'.jpg';}).value();
 
 var NpmExample = GenericExample.extend({
 	name: 'NpmExample',
@@ -20,7 +23,9 @@ var NpmExample = GenericExample.extend({
 	onroute: function(params, is_initial){
 		var self = this;
 		self._super.apply(self, arguments);
-
+		if (!self.get('graph_textures')){
+			self.set('graph_textures', default_graph_textures);
+		}
 		var package_names = params.packages ? params.packages.split(' ') : [];
 		var subtitle = (package_names.length == 0) && ('npm example')
 			|| (package_names.length == 1) && ('viewing ' + package_names[0])
@@ -46,55 +51,47 @@ var NpmExample = GenericExample.extend({
 				return typeof response.body=='string' && JSON.parse(response.body);
 			}).filter(function(_package, i){
 				var error = _package && _package.error;
-				if (error){
-					self.root.displayError('error getting package \''+package_names[i]+'\': \n' + error);
-				}
+				if (error){self.root.displayError('error getting package \''+package_names[i]+'\': \n' + error);}
 				return !error;
 			}).value();
-
+			var dates = [];
 			if (packages.length){
-				var dates = [];
 				for (var date = moment(packages[0].start); !date.isSame(packages[0].end); date.add(1, 'd')){
 					dates.push(date.clone());
 				}
-				self.set({
-					packages: packages,
-					graph: {
-						x_labels: self._.map(dates, function(date){
-							return date.format('MMMM Do');
-						}),
-						layers: self._.map(packages, function(_package){
-							return self._.map(dates, function(date, i){
-								var ref = self._.find(_package.downloads, function(d){return date.isSame(d.day);});
-								return ref ? ref.downloads : 0;
-							});
-						}),
-						colors: ['red','orange','yellow','green','blue','indigo','violet']
-					}
-				});
-			} else {
-				self.set({
-					packages: [],
-					graph: null
-				});
 			}
+			self.set({
+				packages: packages,
+				graph_x_labels: self._.map(dates, function(date){
+					return date.format('MMMM Do');
+				}),
+				graph_data: self._.map(packages, function (_package) {
+					return self._.map(dates, function (date, i) {
+						var ref = self._.find(_package.downloads, function (d) {
+							return date.isSame(d.day);
+						});
+						return ref ? ref.downloads : 0;
+					});
+				})
+			});
 		});
 
 	},
 	oninit: function(){
 		var self = this;
 		self._super.apply(self, arguments);
-
-		self.on('prompt-keypress', function(e){
-			if (e.original.keyCode == 13){
-				var packages = self._.pluck(self.get('packages'), 'package');
-				if (!self._.includes(packages, e.original.target.value)){
-					packages.push(e.original.target.value);
-					self.router.pushRoute(self.name, {packages: packages.join(' ')});
+		if (self.on_client){
+			self.on('prompt-keypress', function(e){
+				if (e.original.keyCode == 13){
+					var packages = self._.pluck(self.get('packages'), 'package');
+					if (!self._.includes(packages, e.original.target.value)){
+						packages.push(e.original.target.value);
+						self.router.pushRoute(self.name, {packages: packages.join(' ')});
+					}
+					e.original.target.value='';
 				}
-				e.original.target.value='';
-			}
-		});
+			});
+		}
 	}
 });
 module.exports = NpmExample;

@@ -9,27 +9,28 @@ var Graph = ri.Ractive.extend({
 		width: 1000,
 		margin_width: 100,
 		height: 500,
-		margin_height: 100,
-		getLayerPoints: function (data, width, height, max) {
-			var self = this;
-			return ri._.map(data, function (datum, x) {
-					return (width * x / (data.length-1)) + ' ' + (height * datum / max);
-				}).join(' ') + ' ' + width + ',0 0,0';
-		}
+		margin_height: 100
 	},
 	oninit: function(){
 		var self = this;
-		self.observe('graph', function(graph){
-			if (graph){
-				ri._.forEach(graph.layers, function(layer){
-					if (layer.length <= 1){throw new Error('must have more than one data point!')}
-				});
-				self.set(ri._.assign({}, graph, {
-					max: Math.max.apply(Math, ri._.map(graph.layers, function(layer){
-						return Math.max.apply(Math, layer);
-					}))
-				}));
+		self.set('data', self.get('data') || []);
+		self.observe('data', function(data){
+			if (data.length && (data[0].length <= 1)) {
+				self.set('data', []);
+				return;
 			}
+			ri._.forEach(data, function(layer_data){
+				if (layer_data.length != data[0].length){throw new Error('must have equal number of data points for each layer!')}
+			});
+			var max = Math.max.apply(Math, ri._.map(data, function(layer_data){
+				return Math.max.apply(Math, layer_data);
+			}));
+			var polygons = ri._.map(data, function(layer_data, i){
+				return ri._.map(layer_data, function (datum, x) {
+						return (x / (layer_data.length-1)) + ' ' + (datum / max);
+					}).join(' ') + ' 1,0 0,0';
+			});
+			self.set('polygons', polygons);
 		});
 	}
 });

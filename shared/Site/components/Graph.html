@@ -1,19 +1,28 @@
 <svg class="Graph" viewBox="0 0 {{width+margin_width}} {{height+margin_height}}">
-    <g style="stroke:rgb(0,0,0); stroke-width: 1">
-        <line x1="{{margin_width}}" y1="{{height}}" x2="{{margin_width}}" y2="0"></line>
-        <line x1="{{margin_width}}" y1="{{height}}" x2="{{width+margin_width}}" y2="{{height}}"></line>
-        {{#x_labels:x}}
-        <g transform="translate( {{width*x/(x_labels.length-1)+margin_width}} , {{height}})">
-            <g transform="rotate(-90)">
-                <line x1="0" y1="0" x2="{{-margin_height/10}}" y2="0"></line>
-                <text text-anchor="end" x="{{-margin_height*2/10}}">{{.}}</text>
-            </g>
-        </g>
+    <defs>
+        {{#textures:i}}
+        <pattern id="texture{{i}}" patternUnits="userSpaceOnUse" width="1" height="1">
+            <image xlink:href="{{.}}" x="-1" y="-1" width="2" height="3" />
+        </pattern>
         {{/}}
+    </defs>
+    <g style="stroke:rgb(0,0,0); stroke-linejoin: round">
         <g transform="translate( {{margin_width}} , {{height}} )">
-            <g transform="scale(1, -1)">
-                {{#layers:i}}
-                    <polygon style="fill: {{colors[i]}}"  points="{{getLayerPoints(., width, height, max)}}"></polygon>
+            <g style="stroke-width: 1.4">
+                <line x1="0" y1="0" x2="0" y2="{{0-height}}"></line>
+                <line x1="0" y1="0" x2="{{width}}" y2="0"></line>
+                {{#x_labels:x}}
+                <g transform="translate( {{width*x/(x_labels.length-1)}} , 0)">
+                    <g transform="rotate(-90)">
+                        <line x1="0" y1="0" x2="{{-margin_height/10}}" y2="0"></line>
+                        <text text-anchor="end" x="{{-margin_height*2/10}}">{{.}}</text>
+                    </g>
+                </g>
+                {{/}}
+            </g>
+            <g transform="scale( {{width}}, {{0-height}} )" style="stroke-width: 0.0025">
+                {{#polygons:i}}
+                    <polygon style="opacity: 0.8; fill: url(#texture{{i%textures.length}})" points="{{.}}"></polygon>
                 {{/}}
             </g>
         </g>
