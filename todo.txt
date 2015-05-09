@@ -1,11 +1,11 @@
 NpmExample
-    overlay, stacked & stacked relative modes
+    relative mode
+    range
+    datapoint grouping
+
     vertical scale
     axis labels
     numbers
-    layer highlight onmouseover
-    range input
-    datapoint grouping input
 
 self._ & ri._ -> _
 site.displayError

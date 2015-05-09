@@ -15,6 +15,11 @@ var NpmExample = GenericExample.extend({
 	example_icon: 'github',
 	example_params: {packages: 'react angular ractive'},
 	template: template,
+	data: {
+		group_by: 1,
+		start: moment().subtract(60, 'days').format('YYYY-MM-DD'),
+		end: moment().format('YYYY-MM-DD')
+	},
 	remove: function(package_name){
 		var self = this;
 		var packages = self._(self.get('packages')).pluck('package').without(package_name).value();

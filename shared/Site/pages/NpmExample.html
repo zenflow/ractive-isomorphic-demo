@@ -4,21 +4,39 @@
         <i class="github icon"></i>
         <div class="content">
             Npm Example
-            <div class="sub header">
-                graphical view of downloads statistics for packages on npm
-            </div>
+            <div class="sub header">graphical view of downloads statistics for packages on npm</div>
         </div>
     </h1>
     <div class="ui divider"></div>
     <div class="ui grid">
         <div class="twelve wide column">
-            <Graph x_labels="{{graph_x_labels}}" data="{{graph_data}}" textures="{{graph_textures}}"/>
+            <Graph stacked="{{graph_stacked}}" relative="{{graph_relative}}" x_labels="{{graph_x_labels}}"
+                   data="{{graph_data}}" textures="{{graph_textures}}" />
         </div>
         <div class="four wide column">
-            <div>
-                <div class="ui huge red right ribbon label">
-                    packages
+
+            <div class="input-header">
+                <div class="ui huge red right ribbon label">options</div>
+            </div>
+            <div class="ui form">
+                <div class="two fields">
+                    <div class="field">
+                        <div class="ui toggle checkbox">
+                            <input type="checkbox" id="stacked" checked="{{graph_stacked}}">
+                            <label for="stacked">stacked</label>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <div class="ui toggle checkbox">
+                            <input type="checkbox" id="relative" checked="{{graph_relative}}">
+                            <label for="relative">relative</label>
+                        </div>
+                    </div>
                 </div>
+            </div>
+
+            <div class="input-header">
+                <div class="ui huge red right ribbon label">packages</div>
             </div>
             <div class="ui big list">
                 {{#packages}}
@@ -34,6 +52,31 @@
                 <input class="prompt" type="text" placeholder="package name" autofocus autocomplete="off" on-keypress="prompt-keypress">
                 <i class="plus icon"></i>
             </div>
+
+            <div class="input-header">
+                <div class="ui huge red right ribbon label">dates</div>
+            </div>
+            <div class="ui form">
+                <div class="field">
+                    <label>start</label>
+                    <div class="ui small input">
+                        <input type="date" value="{{start}}">
+                    </div>
+                </div>
+                <div class="field">
+                    <label>end</label>
+                    <div class="ui input">
+                        <input type="date" value="{{end}}">
+                    </div>
+                </div>
+                <div class="field">
+                    <label>group by</label>
+                    <div class="ui input">
+                        <input type="number" value="{{group_by}}">
+                    </div>
+                </div>
+            </div>
+
         </div>
     </div>
 </div>

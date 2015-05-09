@@ -1,11 +1,18 @@
 .NpmExample .ui.large.icon.input{
     max-width: 100%
 }
-.NpmExample .ui.grid > .column:last-child {
-    text-align: right;
-}
-.NpmExample .ui.grid > .column:last-child > :first-child {
+.NpmExample .input-header {
     text-align: left;
+    margin: 1em 0;
+}
+.NpmExample .input-header:first-child{
+    margin-top: 0;
+}
+.NpmExample .ui.form .field {
+    min-width: 112px;
+}
+.NpmExample .ui.big.list{
+    text-align: center;
 }
 
 
