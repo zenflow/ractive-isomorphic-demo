@@ -6,6 +6,7 @@ var source = require('vinyl-source-stream');
 var buffer = require('vinyl-buffer');
 var sourcemaps = require('gulp-sourcemaps');
 var nodemon = require('gulp-nodemon');
+var nodemon_json = require('./nodemon');
 var uglify = require('gulp-uglify');
 var mainBowerFiles = require('main-bower-files');
 var concat = require('gulp-concat');
@@ -147,11 +148,7 @@ gulp.task('watch', ['build'], function() {
 });
 
 gulp.task('dev', ['watch'], function(cb){
-	nodemon({
-		script: 'server/index.js',
-		ext: 'js html',
-		ignore: ['client/**', 'gulpfile.js']
-	});
+	nodemon(nodemon_json);
 });
 
 gulp.task('default', ['dev']);

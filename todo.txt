@@ -2,10 +2,10 @@ NpmExample
     overlay, stacked & stacked relative modes
     vertical scale
     axis labels
-    layer highlight & stats onmouseover
+    numbers
+    layer highlight onmouseover
     range input
     datapoint grouping input
-    download svg
 
 self._ & ri._ -> _
 site.displayError

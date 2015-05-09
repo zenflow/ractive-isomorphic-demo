@@ -1,0 +1,8 @@
+{
+  "script": "server/index.js",
+  "ext": "js html",
+  "ignore": [
+    "client/**",
+    "gulpfile.js"
+  ]
+}
