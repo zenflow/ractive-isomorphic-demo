@@ -1,12 +1,11 @@
 NpmExample
-    solid colours
-    animate
     range
     datapoint grouping
 
     vertical scale
     axis labels
     numbers
+    grid lines
 
 self._ & ri._ -> _
 site.displayError

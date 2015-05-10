@@ -11,13 +11,15 @@ var NpmExample = GenericExample.extend({
 	example_name: 'npm',
 	example_description: 'graphical view of downloads statistics for packages on npm',
 	example_icon: 'github',
-	example_params: {packages: 'react angular ractive'},
+	example_params: {packages: 'react angular knockout ractive'},
 	template: template,
 	data: {
 		group_by: 1,
 		start: moment().subtract(60, 'days').format('YYYY-MM-DD'),
 		end: moment().format('YYYY-MM-DD'),
-		graph_colors: 'red orange yellow green blue indigo violet'
+		graph_colors: 'red orange yellow green blue indigo violet',
+		graph_stacked: true,
+		graph_relative: true
 	},
 	remove: function(package_name){
 		var self = this;
