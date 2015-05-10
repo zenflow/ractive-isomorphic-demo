@@ -1,11 +1,4 @@
 <svg class="Graph" viewBox="0 0 {{width+margin_width}} {{height+margin_height}}">
-    <defs>
-        {{#textures:i}}
-        <pattern id="texture{{i}}" patternUnits="userSpaceOnUse" width="1" height="1">
-            <image xlink:href="{{.}}" x="-1" y="-1" width="2" height="3" style="opacity: {{stacked?1:0.5}}"/>
-        </pattern>
-        {{/}}
-    </defs>
     <g style="stroke:rgb(0,0,0); stroke-linejoin: round">
         <g transform="translate( {{margin_width}} , {{height}} )">
             <g style="stroke-width: 1.4">
@@ -22,7 +15,7 @@
             </g>
             <g transform="scale( {{width}}, {{0-height}} )" style="stroke-width: 0.0025">
                 {{#polygons:i}}
-                    <polygon style="fill: url(#texture{{i%textures.length}})" points="{{.}}"></polygon>
+                    <polygon style="fill: {{colors[i % colors.length]}}" points="{{.}}"></polygon>
                 {{/}}
             </g>
         </g>

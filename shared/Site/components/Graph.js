@@ -23,34 +23,37 @@ var Graph = ri.Ractive.extend({
 			});
 			var stacked = self.get('stacked');
 			var relative = self.get('relative');
-			if (stacked){
-				var max = ri._.max(ri._.map(ri._.range(data[0].length), function(x){
-					return ri._.sum(ri._.map(data, function(layer_data){return layer_data[x];}))
-				}));
-				var points = [];
-				ri._.forEach(ri._.range(data.length), function(i){
-					points[i] = [];
-					ri._.forEach(ri._.range(data[0].length), function(x){
-						var y2 = points[i-1]?points[i-1][x].y:0;
-						var y1 = y2 + (data[i][x] / max);
-						var x1 = x / (data[i].length-1);
-						points[i][x] = {x: x1, y: y1};
-						points[i][data[0].length+(data[0].length-1-x)] = {x: x1, y: y2};
-					});
-				});
-				return ri._.map(points, function(layer_points){
-					return ri._.map(layer_points, function (point) {return point.x+','+point.y;}).join(' ');
+			var max;
+			if (relative) {
+				max = ri._.map(data[0], function(datum, x){
+					return ri._.sum(ri._.map(data, function(layer_data, i){return data[i][x]}))
 				});
 			} else {
-				var max = ri._.max(ri._.map(data, function(layer_data){
-					return ri._.max(layer_data);
-				}));
-				return ri._.map(data, function(layer_data, i){
-					return ri._.map(layer_data, function (datum, x) {
-							return (x / (layer_data.length-1)) + ' ' + (datum / max);
-						}).join(' ') + ' 1,0 0,0';
-				});
+				if (stacked){
+					max = ri._.max(ri._.map(ri._.range(data[0].length), function (x) {
+						return ri._.sum(ri._.map(data, function (layer_data) {
+							return layer_data[x];
+						}))
+					}));
+				} else {
+					max = ri._.max(ri._.map(data, function (layer_data) {
+						return ri._.max(layer_data);
+					}));
+				}
 			}
+			var lines = [];
+			ri._.forEach(data, function(layer_data, i){
+				lines.push(ri._.map(layer_data, function(datum, x){
+					return {
+						x: x / (data[i].length - 1),
+						y: (stacked && i ? lines[i-1][x].y : 0) + (datum / (relative ? max[x] : max))
+					};
+				}));
+			});
+			return ri._.map(lines, function(line, i){
+				var line_b = stacked && i ? lines[i-1].reverse() : [{x: 1, y: 0}, {x: 0, y: 0}];
+				return ri._.map([].concat(line).concat(line_b), function(p){return p.x+','+ p.y;}).join(' ');
+			});
 		}
 	},
 	oninit: function(){

@@ -5,8 +5,6 @@ var moment = require('moment');
 var template = fs.readFileSync(path.join(__dirname, 'NpmExample.html'), 'utf8');
 var ri = require('ractive-isomorphic');
 
-var default_graph_textures = ri._(7).range().map(function(i){return '/images/textures/'+i+'.jpg';}).value();
-
 var NpmExample = GenericExample.extend({
 	name: 'NpmExample',
 	url: '/examples/npm',
@@ -18,7 +16,8 @@ var NpmExample = GenericExample.extend({
 	data: {
 		group_by: 1,
 		start: moment().subtract(60, 'days').format('YYYY-MM-DD'),
-		end: moment().format('YYYY-MM-DD')
+		end: moment().format('YYYY-MM-DD'),
+		graph_colors: 'red orange yellow green blue indigo violet'
 	},
 	remove: function(package_name){
 		var self = this;
@@ -28,9 +27,6 @@ var NpmExample = GenericExample.extend({
 	onroute: function(params, is_initial){
 		var self = this;
 		self._super.apply(self, arguments);
-		if (!self.get('graph_textures')){
-			self.set('graph_textures', default_graph_textures);
-		}
 		var package_names = params.packages ? params.packages.split(' ') : [];
 		var subtitle = (package_names.length == 0) && ('npm example')
 			|| (package_names.length == 1) && ('viewing ' + package_names[0])
