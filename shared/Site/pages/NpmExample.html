@@ -39,13 +39,16 @@
                 <div class="ui huge red right ribbon label">packages</div>
             </div>
             <div class="ui big list">
-                {{#packages}}
-                <div class="item">
-                    {{.package}}
-                    <a on-click="remove(.package)">
-                        <i class="delete icon"></i>
-                    </a>
-                </div>
+                {{#packages:i}}
+                    <div class="item">
+                        <span>
+                            <i class="circle icon" style="color: {{graph_colors.split(' ')[i]}}"></i>
+                            {{.package}}
+                            <a on-click="remove(.package)">
+                                <i class="delete icon"></i>
+                            </a>
+                        </span>
+                    </div>
                 {{/}}
             </div>
             <div class="ui large icon input">
