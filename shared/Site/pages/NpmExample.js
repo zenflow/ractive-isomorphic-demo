@@ -17,9 +17,7 @@ var NpmExample = GenericExample.extend({
 		group_by: 1,
 		start: moment().subtract(60, 'days').format('YYYY-MM-DD'),
 		end: moment().format('YYYY-MM-DD'),
-		graph_colors: 'red orange yellow green blue indigo violet',
-		graph_stacked: true,
-		graph_relative: true
+		graph_colors: 'red orange yellow green blue indigo violet'
 	},
 	remove: function(package_name){
 		var self = this;

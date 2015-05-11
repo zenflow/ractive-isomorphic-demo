@@ -19,6 +19,8 @@ var Graph = ri.Ractive.extend({
 		var data = self.get('data');
 		var stacked = self.get('stacked');
 		var relative = self.get('relative');
+		var width = self.get('width');
+		var height = self.get('height');
 		if (!data.length || (data[0].length <= 1)) {
 			return [];
 		}
@@ -48,8 +50,8 @@ var Graph = ri.Ractive.extend({
 		ri._.forEach(data, function(layer_data, i){
 			lines.push(ri._.map(layer_data, function(datum, x){
 				return {
-					x: x / (data[i].length - 1),
-					y: (stacked && i ? lines[i-1][x].y : 0) + (datum / (relative ? max[x] : max))
+					x: width * x / (data[i].length - 1),
+					y: (stacked && i ? lines[i-1][x].y : 0) + (height * datum / (relative ? max[x] : max))
 				};
 			}));
 		});
@@ -67,15 +69,19 @@ var Graph = ri.Ractive.extend({
 	},
 	oninit: function(){
 		var self = this;
-		self.observe('data stacked relative', function(){
+		self.observe('data stacked relative width height', function(){
+			// animate old polygons to new ones
 			var polygons = self.getPolygons();
 			if (self.root.on_client){
+				// animate new/old polygons in from/out to horizontal line along top
 				var old_polygons = self.get('polygons');
 				var actual_polygon_length = polygons.length;
 				if (old_polygons.length != polygons.length){
+					var width = self.get('width');
+					var height = self.get('height');
 					var empty = ri._.map(ri._.range(Math.abs(old_polygons.length - polygons.length)), function(i){
 						var line = ri._.map(ri._.range(polygons[0].length / 2), function(x){
-							return {x: x / (polygons[0].length / 2 - 1), y: 1};
+							return {x: width * x / (polygons[0].length / 2 - 1), y: height};
 						});
 						return line.slice().concat(line.reverse());
 					});

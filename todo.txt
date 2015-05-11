@@ -1,11 +1,10 @@
 NpmExample
-    range
-    datapoint grouping
-
     vertical scale
     axis labels
     numbers
     grid lines
+    range
+    datapoint grouping
 
 self._ & ri._ -> _
 site.displayError
@@ -14,7 +13,7 @@ resolve breadcrumb Flash of Unstyled Content
 
 contribute ramjet.js and fly.js
 nice background + copywriting +fork me banner / button
-publish
+deploy
 
 use include-folder + folderify (npm falafel)
 use 'npm-stats' and 'github' modules
