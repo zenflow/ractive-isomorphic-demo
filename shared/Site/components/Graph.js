@@ -51,7 +51,7 @@ var Graph = ri.Ractive.extend({
 			lines.push(ri._.map(layer_data, function(datum, x){
 				return {
 					x: width * x / (data[i].length - 1),
-					y: (stacked && i ? lines[i-1][x].y : 0) + (height * datum / (relative ? max[x] : max))
+					y: (stacked && i ? lines[i-1][x].y : 0) - (height * datum / (relative ? max[x] : max))
 				};
 			}));
 		});
@@ -81,7 +81,7 @@ var Graph = ri.Ractive.extend({
 					var height = self.get('height');
 					var empty = ri._.map(ri._.range(Math.abs(old_polygons.length - polygons.length)), function(i){
 						var line = ri._.map(ri._.range(polygons[0].length / 2), function(x){
-							return {x: width * x / (polygons[0].length / 2 - 1), y: height};
+							return {x: width * x / (polygons[0].length / 2 - 1), y: -height};
 						});
 						return line.slice().concat(line.reverse());
 					});

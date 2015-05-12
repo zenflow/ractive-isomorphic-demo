@@ -1,6 +1,6 @@
 <svg class="Graph" viewBox="0 0 {{width+margin_width}} {{height+margin_height}}">
     <g transform="translate( {{margin_width}} , {{height}} )" style="stroke:rgb(0,0,0); stroke-linejoin: round">
-        <g transform="scale(1, -1)" style="stroke-width: 2">
+        <g style="stroke-width: 2">
             {{#polygons:i}}
                 <polygon style="fill: {{colors[i % colors.length]}}; stroke: {{colors[i % colors.length]}}"
                          points="{{getPoints(.)}}"></polygon>
