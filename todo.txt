@@ -1,11 +1,14 @@
 NpmExample
     vertical scale
     axis labels
-    numbers
     grid lines
+
     range
     datapoint grouping
 
+    numbers
+    stacked & relative switch cookies (add cookies to ri)
+use ramjet
 self._ & ri._ -> _
 site.displayError
 display js/html for ExamplePage
