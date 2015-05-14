@@ -11,7 +11,7 @@
     <div class="ui grid">
         <div class="twelve wide column">
             <Graph stacked="{{graph_stacked}}" relative="{{graph_relative}}" x_labels="{{graph_x_labels}}"
-                   data="{{graph_data}}" colors="{{graph_colors.split(' ')}}" />
+                   x_label="date" y_label="downloads" data="{{graph_data}}" colors="{{getGraphColors()}}" />
         </div>
         <div class="four wide column">
 
@@ -42,7 +42,7 @@
                 {{#packages:i}}
                     <div class="item">
                         <span>
-                            <i class="circle icon" style="color: {{graph_colors.split(' ')[i]}}"></i>
+                            <i class="circle icon" style="color: {{getGraphColors()[i]}}"></i>
                             {{.package}}
                             <a on-click="remove(.package)">
                                 <i class="delete icon"></i>

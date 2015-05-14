@@ -5,6 +5,8 @@ var moment = require('moment');
 var template = fs.readFileSync(path.join(__dirname, 'NpmExample.html'), 'utf8');
 var ri = require('ractive-isomorphic');
 
+var graph_colors = ('red orange yellow green blue indigo violet').split(' ');
+
 var NpmExample = GenericExample.extend({
 	name: 'NpmExample',
 	url: '/examples/npm',
@@ -17,7 +19,7 @@ var NpmExample = GenericExample.extend({
 		group_by: 1,
 		start: moment().subtract(60, 'days').format('YYYY-MM-DD'),
 		end: moment().format('YYYY-MM-DD'),
-		graph_colors: 'red orange yellow green blue indigo violet'
+		getGraphColors: function(){return graph_colors;}
 	},
 	remove: function(package_name){
 		var self = this;

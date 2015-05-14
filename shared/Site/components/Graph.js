@@ -2,31 +2,34 @@ var ri = require('ractive-isomorphic');
 var fs = require('fs');
 var path = require('path');
 var template = fs.readFileSync(path.join(__dirname, 'Graph.html'), 'utf8');
-var Graph = ri.Ractive.extend({
+var Graph = ri.Component.extend({
 	isolated: true,
 	template: template,
 	data: {
 		width: 1000,
-		margin_width: 100,
 		height: 500,
-		margin_height: 100,
+		margin_size: 20,
+		x_axis_height: 120,
+		y_axis_width: 100,
 		getPoints: function(polygon){
 			return ri._.map(polygon, function(p){return p.x+','+ p.y;}).join(' ');
 		}
 	},
-	getPolygons: function(){
+	checkData: function(){
+		var self = this;
+		var data = self.get('data');
+		ri._.forEach(data, function(layer_data){
+			if (layer_data.length != data[0].length){throw new Error('must have equal number of data points for each layer!')}
+		});
+	},
+	setScaleData: function() {
 		var self = this;
 		var data = self.get('data');
 		var stacked = self.get('stacked');
 		var relative = self.get('relative');
-		var width = self.get('width');
-		var height = self.get('height');
 		if (!data.length || (data[0].length <= 1)) {
-			return [];
+			return {whole: 1, empty: 1, y_labels: []};
 		}
-		ri._.forEach(data, function(layer_data){
-			if (layer_data.length != data[0].length){throw new Error('must have equal number of data points for each layer!')}
-		});
 		var whole = (relative && ri._.map(data[0], function(datum, x){
 				return ri._.sum(ri._.map(data, function(layer_data, i){return data[i][x];})) || 1;
 			}))
@@ -41,6 +44,23 @@ var Graph = ri.Ractive.extend({
 			|| (stacked && !relative && ri._.map(data[0], function(datum, x){
 				return whole - ri._.sum(ri._.map(data, function (layer_data, i) {return layer_data[x];}));
 			}));
+		var y_labels = stacked && relative
+			? repeat('25%', 4)
+			: ri._.map(ri._.range(5), function(n){return relative?(100*n/4)+'%':(whole*n/4); });
+		self.set({whole: whole, empty: empty, y_labels: y_labels});
+	},
+	getPolygons: function(){
+		var self = this;
+		var data = self.get('data');
+		var stacked = self.get('stacked');
+		var relative = self.get('relative');
+		var width = self.get('width');
+		var height = self.get('height');
+		var whole = self.get('whole');
+		var empty = self.get('empty');
+		if (!data.length || (data[0].length <= 1)) {
+			return [];
+		}
 		var lines = [];
 		ri._.forEach(data, function(layer_data, i){
 			lines.push(ri._.map(layer_data, function(datum, x){
@@ -62,18 +82,24 @@ var Graph = ri.Ractive.extend({
 	onconfig: function(){
 		var self = this;
 		self.set('data', self.get('data') || []);
+		self.checkData();
+		self.setScaleData();
 		self.set('polygons', self.getPolygons());
 	},
 	oninit: function(){
 		var self = this;
+		self.observe('data', function(){
+			self.checkData();
+		});
 		self.observe('data stacked relative width height', function(){
-			// animate old polygons to new ones
+			self.setScaleData();
 			var new_polygons = self.getPolygons();
 			if (self.root.on_client){
-				// animate new/old polygons in from/out to horizontal line along bottom
+				// animate old polygons to new ones on client
 				var trans_polygons = new_polygons;
 				var old_polygons = self.get('polygons').slice();
 				if (old_polygons.length != new_polygons.length){
+					// new/old polygons in from/out to horizontal line along bottom
 					var width = self.get('width');
 					var height = self.get('height');
 					var empty_line = ri._.map(ri._.range(new_polygons[0].length / 2), function(x){
@@ -86,7 +112,6 @@ var Graph = ri.Ractive.extend({
 					} else {
 						trans_polygons = new_polygons.concat(empties);
 					}
-				} else {
 				}
 				self.animate('polygons', trans_polygons).then(function(){
 					if (old_polygons.length != new_polygons.length) {
@@ -94,6 +119,7 @@ var Graph = ri.Ractive.extend({
 					}
 				});
 			} else {
+				// just set it on the server
 				self.set('polygons', new_polygons);
 			}
 		}, {init: false});

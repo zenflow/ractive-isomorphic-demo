@@ -1,8 +1,4 @@
 NpmExample
-    vertical scale
-    axis labels
-    grid lines
-
     range
     datapoint grouping
 

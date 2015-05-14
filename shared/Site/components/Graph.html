@@ -1,5 +1,5 @@
-<svg class="Graph" viewBox="0 0 {{width+margin_width}} {{height+margin_height}}">
-    <g transform="translate( {{margin_width}} , {{height}} )" style="stroke:rgb(0,0,0); stroke-linejoin: round">
+<svg class="Graph" viewBox="0 0 {{width+y_axis_width+(margin_size*2)}} {{height+x_axis_height+(margin_size*2)}}">
+    <g transform="translate( {{y_axis_width+margin_size}} , {{height+margin_size}} )" style="stroke:rgb(0,0,0); stroke-linejoin: round">
         <g style="stroke-width: 1.4">
             {{#polygons:i}}
                 <polygon style="fill: {{colors[i % colors.length]}}; stroke: {{colors[i % colors.length]}}"
@@ -7,17 +7,48 @@
             {{/}}
         </g>
         <g style="stroke-width: 1">
+            <!-- axis lines -->
             <line x1="0" y1="0" x2="0" y2="{{-height}}"></line>
             <line x1="0" y1="0" x2="{{width}}" y2="0"></line>
-        </g>
-        <g style="stroke-width: 1">
-            {{#x_labels:x}}
-                <g transform="translate( {{width*x/(x_labels.length-1)}} , 0)">
+            <!-- axis labels -->
+            <g style="font-size: 20px;font-weight: bold;">
+                <g transform="translate( {{width/2}} , {{x_axis_height}})">
+                    <text text-anchor="middle">{{x_label}}</text>
+                </g>
+                <g transform="translate({{-y_axis_width}} , {{-height/2}})">
                     <g transform="rotate(-90)">
-                        <line x1="0" y1="0" x2="{{-margin_height/10}}" y2="0"></line>
-                        <text style="stroke-width: 1" text-anchor="end" x="{{-margin_height*2/10}}">{{.}}</text>
+                        <text text-anchor="middle" y="14">{{y_label}}</text>
                     </g>
                 </g>
+            </g>
+            <!-- x-labels -->
+            {{#x_labels:x}}
+            <g transform="translate( {{width*x/(x_labels.length-1)}} , 0)">
+                <g transform="rotate(-90)">
+                    <line x1="0" y1="0" x2="{{-x_axis_height/10}}" y2="0"></line>
+                    <text text-anchor="end" x="{{-x_axis_height*1/5}}" y="5">{{.}}</text>
+                </g>
+            </g>
+            {{/}}
+            <!-- y-labels -->
+            {{#y_labels.length==5}}
+                {{#y_labels:y}}
+                <g transform="translate(0 , {{-height*y/4}} )">
+                    <line x1="0" y1="0" x2="{{-y_axis_width/10}}" y2="0"></line>
+                    <text text-anchor="end" x="{{-y_axis_width*1/5}}" y="5">{{.}}</text>
+                </g>
+                {{/}}
+            {{else}}
+                {{#_.range(5):y}}
+                <g transform="translate(0 , {{-height*y/4}} )">
+                    <line x1="0" y1="0" x2="{{-y_axis_width/10}}" y2="0"></line>
+                </g>
+                {{/}}
+                {{#y_labels:y}}
+                <g transform="translate(0 , {{-height*(y+0.5)/4}} )">
+                    <text text-anchor="end" x="{{-y_axis_width*1/5}}" y="5">{{.}}</text>
+                </g>
+                {{/}}
             {{/}}
         </g>
     </g>
