@@ -8,7 +8,7 @@ var Graph = ri.Component.extend({
 	data: {
 		width: 1000,
 		height: 500,
-		margin_size: 20,
+		margin_size: 10,
 		x_axis_height: 120,
 		y_axis_width: 100,
 		getPoints: function(polygon){

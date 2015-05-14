@@ -1,6 +1,4 @@
-.NpmExample .ui.large.icon.input{
-    max-width: 100%
-}
+/* headers */
 .NpmExample .input-header {
     text-align: left;
     margin: 1em 0;
@@ -8,14 +6,27 @@
 .NpmExample .input-header:first-child{
     margin-top: 0;
 }
+
+/* view & dates */
+.NpmExample .ui.checkbox {
+    margin-bottom: 1rem;
+}
 .NpmExample .ui.form .field {
     min-width: 112px;
 }
+
+/* graph */
+.NpmExample .ui.grid > .column:not(:first-child):not(:last-child) {
+    padding: 0;
+}
+.Graph{
+    width: 100%;
+}
+
+/* packages */
 .NpmExample .ui.big.list{
     text-align: center;
 }
-
-
-.Graph{
-    width: 100%;
+.NpmExample .ui.icon.input{
+    max-width: 100%
 }

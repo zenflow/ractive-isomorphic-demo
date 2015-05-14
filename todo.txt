@@ -1,7 +1,8 @@
 NpmExample
-    range
     datapoint grouping
+    range
 
+    package exists autovalidate
     numbers
     stacked & relative switch cookies (add cookies to ri)
 use ramjet
