@@ -1,7 +1,7 @@
 NpmExample
     datapoint grouping
     range
-
+    click for fullscreen
     package exists autovalidate
     numbers
     stacked & relative switch cookies (add cookies to ri)

@@ -22,7 +22,7 @@ var config = function(key, value){
 	console.log('config', key, typeof value, value);
 	eval(key + ' = ' + JSON.stringify(value) + '; ');
 };
-config('do_sourcemaps', true);
+config('do_sourcemaps', yargs.argv.production?false:true);
 config('do_bower_scripts', false);
 config('do_minimize', yargs.argv.production?true:yargs.argv.do_minimize);
 config('custom_semantic_build', yargs.argv.production?true:yargs.argv.custom_semantic_build);

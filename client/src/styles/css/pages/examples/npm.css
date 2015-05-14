@@ -17,9 +17,10 @@
 
 /* graph */
 .NpmExample .ui.grid > .column:not(:first-child):not(:last-child) {
-    padding: 0;
+    padding-left: 0;
+    padding-right: 0;
 }
-.Graph{
+.Graph {
     width: 100%;
 }
 
