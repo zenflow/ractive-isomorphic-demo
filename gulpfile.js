@@ -29,14 +29,8 @@ config('custom_semantic_build', yargs.argv.production?true:yargs.argv.custom_sem
 config('browserify_transforms', ['brfs']);
 config('browserify_node_modules', ['ractive-isomorphic', 'httpinvoke', 'ramjet', 'moment']);
 
-var cleaned = false;
 gulp.task('clean', function (done) {
-	if (cleaned){
-		done();
-	} else {
-		cleaned = true;
-		del(['client/build'], done);
-	}
+	del(['client/build'], done);
 });
 
 gulp.task('bower', function(){
@@ -47,7 +41,7 @@ gulp.task('bower', function(){
 	});
 });
 
-gulp.task('scripts:bower_components', ['clean', 'bower'], function(){
+gulp.task('scripts:bower_components', ['bower'], function(){
 	return gulp.src(mainBowerFiles({filter: function(str){return str.slice(-3)=='.js';}}))
 		.pipe(gif(do_sourcemaps, sourcemaps.init()))
 		.pipe(concat('bower_components.js'))
@@ -55,7 +49,7 @@ gulp.task('scripts:bower_components', ['clean', 'bower'], function(){
 		.pipe(gif(do_sourcemaps, sourcemaps.write('./')))
 		.pipe(gulp.dest('./client/build/scripts'));
 });
-gulp.task('scripts:node_modules', ['clean'], function () {
+gulp.task('scripts:node_modules', function () {
 	var b = browserify({debug: do_sourcemaps});
 	browserify_node_modules.forEach(function(module_name){
 		b.require(module_name);
@@ -68,7 +62,7 @@ gulp.task('scripts:node_modules', ['clean'], function () {
 		.pipe(gif(do_sourcemaps, sourcemaps.write('./')))
 		.pipe(gulp.dest('./client/build/scripts'))
 });
-gulp.task('scripts:index', ['clean'], function () {
+gulp.task('scripts:index', function () {
 	var b = browserify('./client/src/scripts/index.js', {debug: do_sourcemaps})
 		.external(browserify_node_modules)
 		.transform(browserify_transforms);
@@ -90,7 +84,7 @@ var minifyCss_options = {
 	restructuring: false,
 	keepSpecialComments: 0
 };
-gulp.task('styles:semantic', ['clean', 'bower'], function () {
+gulp.task('styles:semantic', ['bower'], function () {
 	if (custom_semantic_build){
 		return new Promise(function(resolve, reject){
 			var custom_src_stream = gulp.src('./client/src/styles/**')
@@ -113,7 +107,7 @@ gulp.task('styles:semantic', ['clean', 'bower'], function () {
 			.pipe(gulp.dest('./client/build/styles'));
 	}
 });
-gulp.task('styles:css', ['clean'], function(){
+gulp.task('styles:css', function(){
 	return gulp.src('./client/src/styles/css/**')
 		.pipe(gif(do_sourcemaps, sourcemaps.init()))
 		.pipe(concat('css.css'))
@@ -123,11 +117,11 @@ gulp.task('styles:css', ['clean'], function(){
 });
 gulp.task('styles', ['styles:semantic', 'styles:css']);
 
-gulp.task('assets:bower_components', ['clean', 'bower'], function(){
+gulp.task('assets:bower_components', ['bower'], function(){
 	return gulp.src('./bower_components/semantic-ui/src/**/assets/**')
 		.pipe(gulp.dest('./client/build'+(custom_semantic_build?'':'/styles')));
 });
-gulp.task('assets:index', ['clean'], function(){
+gulp.task('assets:index', function(){
 	return gulp.src('./client/src/assets/**')
 		.pipe(gulp.dest('./client/build'));
 });
