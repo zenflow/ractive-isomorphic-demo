@@ -28,7 +28,8 @@ var Graph = ri.Component.extend({
 		var stacked = self.get('stacked');
 		var relative = self.get('relative');
 		if (!data.length || (data[0].length <= 1)) {
-			return {whole: 1, empty: 1, y_labels: []};
+			self.set({whole: 1, empty: 1, y_labels: []});
+			return;
 		}
 		var whole = (relative && ri._.map(data[0], function(datum, x){
 				return ri._.sum(ri._.map(data, function(layer_data, i){return data[i][x];})) || 1;
@@ -102,15 +103,16 @@ var Graph = ri.Component.extend({
 					// new/old polygons in from/out to horizontal line along bottom
 					var width = self.get('width');
 					var height = self.get('height');
-					var empty_line = ri._.map(ri._.range(new_polygons[0].length / 2), function(x){
-						return {x: width * x / (new_polygons[0].length / 2 - 1), y: 0};
+					var points_per_layer = ((old_polygons[0] || new_polygons[0]).length) / 2;
+					var empty_line = ri._.map(ri._.range(points_per_layer), function(x){
+						return {x: width * x / (points_per_layer - 1), y: 0};
 					});
-					var empty = empty_line.concat(empty_line.slice().reverse());
-					var empties = repeat(empty, Math.abs(old_polygons.length - new_polygons.length));
+					var empty_polygon = empty_line.concat(empty_line.slice().reverse());
+					var empty_polygons = repeat(empty_polygon, Math.abs(old_polygons.length - new_polygons.length));
 					if (old_polygons.length < new_polygons.length){
-						self.set('polygons', old_polygons.concat(empties));
+						self.set('polygons', old_polygons.concat(empty_polygons));
 					} else {
-						trans_polygons = new_polygons.concat(empties);
+						trans_polygons = new_polygons.concat(empty_polygons);
 					}
 				}
 				self.animate('polygons', trans_polygons).then(function(){
