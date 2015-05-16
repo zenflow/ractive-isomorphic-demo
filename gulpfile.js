@@ -22,7 +22,7 @@ var config = function(key, value){
 	console.log('config', key, typeof value, value);
 	eval(key + ' = ' + JSON.stringify(value) + '; ');
 };
-config('do_sourcemaps', yargs.argv.production?false:true);
+config('skip_sourcemaps', yargs.argv.production?true:yargs.argv.skip_sourcemaps);
 config('do_bower_scripts', false);
 config('do_minimize', yargs.argv.production?true:yargs.argv.do_minimize);
 config('custom_semantic_build', yargs.argv.production?true:yargs.argv.custom_semantic_build);
@@ -43,35 +43,35 @@ gulp.task('bower', function(){
 
 gulp.task('scripts:bower_components', ['bower'], function(){
 	return gulp.src(mainBowerFiles({filter: function(str){return str.slice(-3)=='.js';}}))
-		.pipe(gif(do_sourcemaps, sourcemaps.init()))
+		.pipe(gif(!skip_sourcemaps, sourcemaps.init()))
 		.pipe(concat('bower_components.js'))
 		.pipe(gif(do_minimize, uglify()))
-		.pipe(gif(do_sourcemaps, sourcemaps.write('./')))
+		.pipe(gif(!skip_sourcemaps, sourcemaps.write('./')))
 		.pipe(gulp.dest('./client/build/scripts'));
 });
 gulp.task('scripts:node_modules', function () {
-	var b = browserify({debug: do_sourcemaps});
+	var b = browserify({debug: !skip_sourcemaps});
 	browserify_node_modules.forEach(function(module_name){
 		b.require(module_name);
 	});
 	return b.bundle()
 		.pipe(source('node_modules.js'))
 		.pipe(buffer())
-		.pipe(gif(do_sourcemaps, sourcemaps.init({loadMaps: true})))
+		.pipe(gif(!skip_sourcemaps, sourcemaps.init({loadMaps: true})))
 		.pipe(gif(do_minimize, uglify()))
-		.pipe(gif(do_sourcemaps, sourcemaps.write('./')))
+		.pipe(gif(!skip_sourcemaps, sourcemaps.write('./')))
 		.pipe(gulp.dest('./client/build/scripts'))
 });
 gulp.task('scripts:index', function () {
-	var b = browserify('./client/src/scripts/index.js', {debug: do_sourcemaps})
+	var b = browserify('./client/src/scripts/index.js', {debug: !skip_sourcemaps})
 		.external(browserify_node_modules)
 		.transform(browserify_transforms);
 	return b.bundle()
 		.pipe(source('index.js'))
 		.pipe(buffer())
-		.pipe(gif(do_sourcemaps, sourcemaps.init({loadMaps: true})))
+		.pipe(gif(!skip_sourcemaps, sourcemaps.init({loadMaps: true})))
 		.pipe(gif(do_minimize, uglify()))
-		.pipe(gif(do_sourcemaps, sourcemaps.write('./')))
+		.pipe(gif(!skip_sourcemaps, sourcemaps.write('./')))
 		.pipe(gulp.dest('./client/build/scripts'));
 });
 gulp.task('scripts', (do_bower_scripts?['scripts:bower_components']:[]).concat(['scripts:node_modules', 'scripts:index']));
@@ -92,11 +92,11 @@ gulp.task('styles:semantic', ['bower'], function () {
 			custom_src_stream.once('error', reject);
 			custom_src_stream.once('end', function(){
 				var stream = gulp.src('./bower_components/semantic-ui/src/semantic.less')
-					.pipe(gif(do_sourcemaps, sourcemaps.init()))
+					.pipe(gif(!skip_sourcemaps, sourcemaps.init()))
 					.pipe(less())
 					.pipe(autoprefixer(autoprefixer_options))
 					.pipe(gif(do_minimize, minifyCss(minifyCss_options)))
-					.pipe(gif(do_sourcemaps, sourcemaps.write('./')))
+					.pipe(gif(!skip_sourcemaps, sourcemaps.write('./')))
 					.pipe(gulp.dest('./client/build/styles'));
 				stream.once('error', reject);
 				stream.once('end', resolve);
@@ -109,10 +109,10 @@ gulp.task('styles:semantic', ['bower'], function () {
 });
 gulp.task('styles:css', function(){
 	return gulp.src('./client/src/styles/css/**')
-		.pipe(gif(do_sourcemaps, sourcemaps.init()))
+		.pipe(gif(!skip_sourcemaps, sourcemaps.init()))
 		.pipe(concat('css.css'))
 		.pipe(gif(do_minimize, minifyCss(minifyCss_options)))
-		.pipe(gif(do_sourcemaps, sourcemaps.write('./')))
+		.pipe(gif(!skip_sourcemaps, sourcemaps.write('./')))
 		.pipe(gulp.dest('./client/build/styles'))
 });
 gulp.task('styles', ['styles:semantic', 'styles:css']);
